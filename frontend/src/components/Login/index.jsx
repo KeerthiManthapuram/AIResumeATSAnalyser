@@ -22,7 +22,7 @@ const Login = () => {
     event.preventDefault()
     setLoading(true)
     setError("")
-    const url = "https://resume-ats-backend-1-ysjt.onrender.com/auth/login";
+    const url = "https://airesumeatsanalyser.onrender.com/auth/login";
     const userDetails = {
       email,
       password
