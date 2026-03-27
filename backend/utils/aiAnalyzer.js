@@ -80,14 +80,11 @@ export const analyzeWithGemini = async (resumeText, jobDescription) => {
 
 
 const buildPrompt = (resumeText, jobDescription) => `
-You are an ATS resume analyzer.
+You are an advanced ATS resume optimizer.
 
-Return STRICT JSON only.
-Do not wrap in markdown.
-Do not include backticks.
-Do not include explanations.
+Analyze AND improve the resume based on the job description.
 
-Use this exact schema:
+Return STRICT JSON ONLY.
 
 {
   "success": true,
@@ -98,18 +95,25 @@ Use this exact schema:
       "from_resume_for_job_description": [],
       "from_job_description_for_resume": []
     },
-    "ats_optimized_bullet_point_improvements": [
-      {
-        "original_summary": "",
-        "suggested_bullets": [],
-        "reasoning": ""
-      }
-    ],
     "ats_optimization_tips": [],
     "compatibility_score": 0,
     "overall_assessment": ""
+  },
+  "improved_resume": {
+    "professional_summary": "",
+    "skills": [],
+    "experience_points": [],
+    "projects": []
   }
 }
+
+RULES:
+- Extract real skills
+- Compare JD and Resume
+- Suggest missing skills
+- Rewrite resume with strong action verbs
+- Add quantified achievements
+- Make resume ATS optimized
 
 Resume:
 ${resumeText}

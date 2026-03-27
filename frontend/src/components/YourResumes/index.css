@@ -276,3 +276,40 @@
 @media (max-width: 600px) {
   .modal { padding: 28px 20px; }
 }
+
+/* ---- JOB DESCRIPTION INPUT ---- */
+.job-input {
+  width: 100%;
+  max-width: 480px;
+  min-height: 120px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,200,150,0.3);
+  background: rgba(255,255,255,0.04);
+  color: #f0f4ff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  resize: none;
+  outline: none;
+  overflow: hidden;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+/* Optional: smoother scroll look */
+.job-input::-webkit-scrollbar {
+  width: 4px;
+}
+
+.job-input::-webkit-scrollbar-thumb {
+  background: rgba(0,200,150,0.4);
+  border-radius: 10px;
+}
+
+.job-input::placeholder {
+  color: #8896b3;
+}
+
+.job-input:focus {
+  border-color: rgba(0,200,150,0.7);
+  background: rgba(0,200,150,0.04);
+}

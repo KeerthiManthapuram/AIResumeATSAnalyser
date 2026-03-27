@@ -3,6 +3,7 @@ import { parseResume } from "../utils/resumeParser.js";
 import { extractKeywords } from "../utils/keywordExtractor.js";
 import { calculateATSScore } from "../utils/atsScore.js";
 import { analyzeWithGemini } from "../utils/aiAnalyzer.js";
+import { generatePDF } from "../utils/pdfGenerator.js";
 
 /* =========================
    UPLOAD + PARSE RESUME
@@ -60,16 +61,44 @@ export const analyzeResume = async (req, res) => {
     console.log("ATS Score:", score);
 
     // ✅ Gemini AI analysis
-    const suggestions = await analyzeWithGemini(resumeText, jobDescription);
+    const aiResult = await analyzeWithGemini(resumeText, jobDescription);
 
     res.json({
       success: true,
       score,
-      suggestions
-    });
+      analysis: aiResult.analysis,
+      improved_resume: aiResult.improved_resume
+  });
 
   } catch (err) {
     console.error("Analyze Resume Error:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/* =========================
+   DOWNLOAD UPDATED RESUME
+   ========================= */
+
+export const downloadResume = async (req, res) => {
+  try {
+    const { improved_resume } = req.body;
+
+    if (!improved_resume) {
+      return res.status(400).json({ error: "No resume data" });
+    }
+
+    const pdfBuffer = await generatePDF(improved_resume);
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=optimized_resume.pdf"
+    );
+
+    res.send(pdfBuffer);
+
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };

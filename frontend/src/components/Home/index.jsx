@@ -1,21 +1,6 @@
-// import Navbar from "../Navbar";
-// import "./index.css";
-
-// const Home = () => {
-//   return (
-//     <div>
-//       <Navbar />
-//       <div className="home-container">
-//         <h1>Welcome to Resume ATS Analyzer</h1>
-//         <p>Your dashboard will appear here.</p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Home;
 import Navbar from "../Navbar";
 import "./index.css";
+
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -54,7 +39,11 @@ const Home = () => {
             >
               Get Started — It's Free
             </button>
-            <button className="btn-secondary">See Demo</button>
+            <button className="btn-secondary"
+              onClick={() => navigate("/demo")}
+            >
+              See Demo
+            </button>
           </div>
 
           {/* Score card tease */}
@@ -110,7 +99,7 @@ const Home = () => {
         <div className="features-cta">
           <button
             className="btn-primary"
-            onClick={() => navigate("/your-resumes")}
+            onClick={() => navigate("/optimize-resume")}
           >
             Optimize my Resume
           </button>
@@ -205,7 +194,8 @@ const Home = () => {
             >
               Start for Free
             </button>
-            <button className="btn-secondary">Learn More</button>
+            <button className="btn-secondary"
+            onClick={() => navigate("/learn")}>Learn More</button>
           </div>
         </div>
       </section>
@@ -247,8 +237,15 @@ const Home = () => {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>© 2026 ResumeATS Analyzer. All rights reserved.</p>
-          <p>Made with ❤️ for jobseekers worldwide</p>
+          <p>
+          © {new Date().getFullYear()} Keerthi Manthapuram |
+          <a href="https://github.com/KeerthiManthapuram" target="_blank"> GitHub </a> |
+          <a href="https://www.linkedin.com/in/keerthimanthapuram" 
+          target="_blank"> LinkedIn </a>
+          </p>
+          <p>
+          Full Stack Developer | React • Node.js • AI Enthusiast
+          </p>
         </div>
       </footer>
     </div>

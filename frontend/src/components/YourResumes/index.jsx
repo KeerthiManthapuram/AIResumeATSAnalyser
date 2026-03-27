@@ -7,7 +7,7 @@ const YourResumes = () => {
   const [error, setError] = useState("");
   const [analysisResult, setAnalysisResult] = useState(null);
   const [showModal, setShowModal] = useState(false);
- 
+  const [jobDescription, setJobDescription] = useState("");
  
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -52,13 +52,16 @@ const YourResumes = () => {
       }
  
       const data = await uploadResponse.json();
+
+      if (!jobDescription.trim()) {
+        setError("Tip: Add job description for better analysis");
+      }
  
       // STEP 2️⃣ Analyze Resume
       const rawData = {
         resumeText: data.text, // must match backend
-        jobDescription:
-          "ANYTHING YOU WANT! For best results, use a real job description from a role you're interested in.",
-      };
+        jobDescription: jobDescription || "General software developer role",
+        };
  
       const analyzeResponse = await fetch(
         "https://airesumeatsanalyser.onrender.com/resume/analyze",
@@ -99,7 +102,14 @@ const YourResumes = () => {
         accept=".pdf"
         onChange={handleFileChange}
       />
- 
+
+      <textarea
+      placeholder="Paste Job Description (Recommended for better analysis)"
+      value={jobDescription}
+      onChange={(e) => setJobDescription(e.target.value)}
+      className="job-input"
+      />
+
       <button onClick={handleUploadAndAnalyze} disabled={loading}>
         {loading ? "Processing..." : "Upload & Analyze"}
       </button>
