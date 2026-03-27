@@ -22,7 +22,7 @@ const Login = () => {
     event.preventDefault()
     setLoading(true)
     setError("")
-    const url = "https://airesumeatsanalyser.onrender.com/auth/login";
+    const url = "http://localhost:5000/auth/login";
     const userDetails = {
       email,
       password

@@ -1,39 +1,3 @@
-// // import { Navigate } from "react-router-dom";
-
-// // const ProtectedRoute = ({ children }) => {
-// //   const token = localStorage.getItem("token");
-
-// //   if (!token) {
-// //     return <Navigate to="/login" replace />;
-// //   }
-
-// //   return children;
-// // };
-
-// // export default ProtectedRoute;
-// // ...existing code...
-// import { useNavigate } from "react-router-dom";
-// import "./index.css";
-
-// const Navbar = () => {
-//   const navigate = useNavigate();
-//   const handleLogout = () => {
-//     localStorage.removeItem("token");
-//     navigate("/login");
-//   };
-
-//   return (
-//     <div className="navbar">
-//       <div>Resume ATS Analyzer</div>
-//       <div>
-//         <button onClick={() => navigate("/dashboard")}>Dashboard</button>
-//         <button onClick={handleLogout}>Logout</button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Navbar;
 import { useNavigate, useLocation } from "react-router-dom";
 import "./index.css";
 

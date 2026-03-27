@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./index.css";
- 
+
 const YourResumes = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -8,35 +9,37 @@ const YourResumes = () => {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [jobDescription, setJobDescription] = useState("");
- 
+
+  const navigate = useNavigate();
+
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
     setError("");
   };
- 
+
   const handleUploadAndAnalyze = async () => {
     if (!selectedFile) {
       setError("Please select a resume to upload.");
       return;
     }
- 
+
     const token = localStorage.getItem("token");
- 
+
     if (!token) {
       setError("You must be logged in.");
       return;
     }
- 
+
     const formData = new FormData();
     formData.append("resume", selectedFile);
- 
+
     try {
       setLoading(true);
       setError("");
- 
-      // STEP 1️⃣ Upload Resume
+
+      // Upload
       const uploadResponse = await fetch(
-        "https://airesumeatsanalyser.onrender.com/resume/upload",
+        "http://localhost:5000/resume/upload",
         {
           method: "POST",
           headers: {
@@ -45,186 +48,151 @@ const YourResumes = () => {
           body: formData,
         }
       );
- 
-      if (!uploadResponse.ok) {
-        const errorText = await uploadResponse.text();
-        throw new Error(errorText || "Resume upload failed.");
-      }
- 
-      const data = await uploadResponse.json();
 
-      if (!jobDescription.trim()) {
-        setError("Tip: Add job description for better analysis");
-      }
- 
-      // STEP 2️⃣ Analyze Resume
-      const rawData = {
-        resumeText: data.text, // must match backend
-        jobDescription: jobDescription || "General software developer role",
-        };
- 
+      const uploadData = await uploadResponse.json();
+
+      // Analyze
       const analyzeResponse = await fetch(
-        "https://airesumeatsanalyser.onrender.com/resume/analyze",
+        "http://localhost:5000/resume/analyze",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(rawData),
+          body: JSON.stringify({
+            resumeText: uploadData.text,
+            jobDescription:
+              jobDescription ||
+              "Full stack developer with React, Node.js, MongoDB",
+          }),
         }
       );
- 
-      if (!analyzeResponse.ok) {
-        const errorText = await analyzeResponse.text();
-        throw new Error(errorText || "Resume analysis failed.");
-      }
+
       const analyzeData = await analyzeResponse.json();
-      console.log(analyzeData)
+
+      console.log("FULL RESPONSE:", analyzeData);
+
       setAnalysisResult(analyzeData);
       setShowModal(true);
- 
- 
+
     } catch (err) {
       console.error(err);
-      setError(err.message || "Something went wrong. Please try again.");
+      setError("Something went wrong");
     } finally {
       setLoading(false);
     }
   };
- 
+
   return (
     <div className="resume-container">
       <h2>Upload Your Resume</h2>
- 
-      <input
-        type="file"
-        accept=".pdf"
-        onChange={handleFileChange}
-      />
+
+      <input type="file" accept=".pdf" onChange={handleFileChange} />
 
       <textarea
-      placeholder="Paste Job Description (Recommended for better analysis)"
-      value={jobDescription}
-      onChange={(e) => setJobDescription(e.target.value)}
-      className="job-input"
+        placeholder="Paste Job Description"
+        value={jobDescription}
+        onChange={(e) => setJobDescription(e.target.value)}
+        className="job-input"
       />
 
       <button onClick={handleUploadAndAnalyze} disabled={loading}>
         {loading ? "Processing..." : "Upload & Analyze"}
       </button>
- 
+
       {analysisResult && (
         <button onClick={() => setShowModal(true)}>
-            View Report
+          View Report
         </button>
-        )}
- 
-       {showModal && analysisResult?.success && (
-  <div className="modal-overlay">
-    <div className="modal">
-      <h2>ATS Resume Analysis Report</h2>
- 
-      {(() => {
-        const report =
-          analysisResult.suggestions?.analysis ??
-          analysisResult.suggestions ??
-          analysisResult;
- 
-        return (
-          <>
-            {/* Score */}
-            <p>
-              <strong>Compatibility Score:</strong>{" "}
-              {report?.compatibility_score ?? analysisResult.score ?? "N/A"}%
-            </p>
- 
-            {/* Resume Skills */}
-            <h3>Resume Skills</h3>
-            <ul>
-              {report?.resume_skills?.map((skill, index) => (
-                <li key={index}>{skill}</li>
-              ))}
-            </ul>
- 
-            {/* Job Description Skills */}
-            <h3>Job Description Skills</h3>
-            <ul>
-              {report?.job_description_skills?.map((skill, index) => (
-                <li key={index}>{skill}</li>
-              ))}
-            </ul>
- 
-            {/* Missing Skills */}
-            <h3>Missing Skills (Add to Resume)</h3>
-            <ul>
-              {report?.missing_skills?.from_resume_for_job_description?.map(
-                (skill, index) => (
-                  <li key={index}>{skill}</li>
-                )
-              )}
-            </ul>
- 
-            <h3>Extra Skills (Not Required by Job)</h3>
-            <ul>
-              {report?.missing_skills?.from_job_description_for_resume?.map(
-                (skill, index) => (
-                  <li key={index}>{skill}</li>
-                )
-              )}
-            </ul>
- 
-            {/* ATS Optimization Tips */}
-            <h3>ATS Optimization Tips</h3>
-            <ul>
-              {report?.ats_optimization_tips?.map((tip, index) => (
-                <li key={index}>{tip.replace(/\*\*/g, "")}</li>
-              ))}
-            </ul>
- 
-            {/* Bullet Improvements */}
-            <h3>Bullet Point Improvements</h3>
-            {report?.ats_optimized_bullet_point_improvements?.map(
-              (item, index) => (
-                <div key={index} style={{ marginBottom: "15px" }}>
+      )}
+
+      {/* MODAL */}
+      {showModal && analysisResult?.success && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>ATS Resume Analysis Report</h2>
+
+            {(() => {
+              const report = analysisResult?.analysis || {};
+
+              return (
+                <>
                   <p>
-                    <strong>Original:</strong> {item.original_summary}
+                    <strong>Compatibility Score:</strong>{" "}
+                    {report.compatibility_score || analysisResult.score || 0}%
                   </p>
- 
-                  <p>
-                    <strong>Reasoning:</strong> {item.reasoning}
-                  </p>
- 
-                  <strong>Suggested Bullets:</strong>
-                  <ul>
-                    {item.suggested_bullets?.map((bullet, i) => (
-                      <li key={i}>{bullet}</li>
-                    ))}
-                  </ul>
-                </div>
-              )
-            )}
- 
-            {/* Overall Assessment */}
-            <h3>Overall Assessment</h3>
-            <p>{report?.overall_assessment}</p>
- 
-            <button onClick={() => setShowModal(false)}>Close</button>
-          </>
-        );
-      })()}
-    </div>
-  </div>
-)}
- 
- 
- 
- 
- 
- 
+
+                  {/* Resume Skills */}
+                  <h3>Resume Skills</h3>
+                  {report.resume_skills?.length ? (
+                    <ul>
+                      {report.resume_skills.map((s, i) => (
+                        <li key={i}>{s}</li>
+                      ))}
+                    </ul>
+                  ) : <p>No skills found</p>}
+
+                  {/* JD Skills */}
+                  <h3>Job Description Skills</h3>
+                  {report.job_description_skills?.length ? (
+                    <ul>
+                      {report.job_description_skills.map((s, i) => (
+                        <li key={i}>{s}</li>
+                      ))}
+                    </ul>
+                  ) : <p>No JD skills found</p>}
+
+                  {/* Missing */}
+                  <h3>Missing Skills</h3>
+                  {report.missing_skills?.from_resume_for_job_description?.length ? (
+                    <ul>
+                      {report.missing_skills.from_resume_for_job_description.map((s, i) => (
+                        <li key={i}>{s}</li>
+                      ))}
+                    </ul>
+                  ) : <p>No missing skills</p>}
+
+                  {/* Tips */}
+                  <h3>ATS Tips</h3>
+                  {report.ats_optimization_tips?.length ? (
+                    <ul>
+                      {report.ats_optimization_tips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  ) : <p>No tips available</p>}
+
+                  {/* Overall */}
+                  <h3>Overall</h3>
+                  <p>{report.overall_assessment || "No assessment"}</p>
+
+                  {/* Buttons */}
+                  <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
+                    <button
+                      onClick={() =>
+                        navigate("/optimize-resume", {
+                          state: {
+                            improvedResume: analysisResult.improved_resume,
+                          },
+                        })
+                      }
+                    >
+                      Optimize & Download
+                    </button>
+
+                    <button onClick={() => setShowModal(false)}>Close</button>
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+        </div>
+      )}
+
       {error && <p className="error">{error}</p>}
     </div>
   );
 };
- 
+
 export default YourResumes;

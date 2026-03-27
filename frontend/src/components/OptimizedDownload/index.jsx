@@ -1,17 +1,20 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import "./index.css";
 
-const OptimizedDownload = ({ improvedResume }) => {
+const OptimizedDownload = () => {
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
+  const improvedResume = location.state?.improvedResume;
 
   const handleDownload = async () => {
     try {
       setLoading(true);
 
       const token = localStorage.getItem("token");
-
+      console.log("FRONTEND TOKEN:", token);
       const response = await fetch(
-        "https://airesumeatsanalyser.onrender.com/resume/download",
+        "http://localhost:5000/resume/download",
         {
           method: "POST",
           headers: {
@@ -56,17 +59,23 @@ const OptimizedDownload = ({ improvedResume }) => {
           <div className="orb orb-3"></div>
         </div>
 
-        <h2>Download Optimized Resume</h2>
-
-        <button
+        <div className="download-content">
+          <p className="download-tag">AI Powered Optimization</p>
+          <h2 className="download-title">
+          Download Your <span className="gradient-text">Optimized Resume</span>
+          </h2>
+          <p className="download-sub">
+          Your resume has been enhanced using ATS intelligence. Download the optimized version below.
+          </p>
+          <button
           className="download-btn"
           onClick={handleDownload}
           disabled={loading}
-        >
-          {loading ? "Generating PDF..." : "⬇ Optimized Resume"}
-        </button>
-
-      </section>
+          >
+          {loading ? "Generating PDF..." : "⬇ Download Resume"}
+          </button>
+          </div>
+        </section>
     </div>
   );
 };

@@ -31,7 +31,7 @@ const Register = () => {
     setError("");
     setSuccess("");
 
-    const url = "https://airesumeatsanalyser.onrender.com/auth/register";
+    const url = "http://localhost:5000/auth/register";
     const userDetails = { name, email, password }
 
     const options = {

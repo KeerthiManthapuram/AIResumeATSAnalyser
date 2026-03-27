@@ -24,7 +24,7 @@ export const uploadResume = async (req, res) => {
     if (!text || text.trim().length === 0) {
       return res.status(400).json({ error: "No text extracted from PDF" });
     }
-
+    
     console.log("Resume parsed. Length:", text.length);
 
     res.json({
@@ -82,6 +82,7 @@ export const analyzeResume = async (req, res) => {
 
 export const downloadResume = async (req, res) => {
   try {
+    console.log("DOWNLOAD BODY:", req.body);
     const { improved_resume } = req.body;
 
     if (!improved_resume) {

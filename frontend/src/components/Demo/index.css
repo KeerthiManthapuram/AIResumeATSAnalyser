@@ -28,6 +28,7 @@
   position: relative;
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
@@ -162,4 +163,96 @@
 .overall-text {
   color: var(--text-muted);
   line-height: 1.6;
+}
+
+/* ==== JOB DESCRIPTION CARD ==== */
+.jd-container {
+  background: rgba(255,255,255,0.03);
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 25px;
+  backdrop-filter: blur(10px);
+  transition: 0.3s ease;
+}
+
+.jd-container:hover {
+  border-color: var(--teal);
+  box-shadow: 0 0 25px rgba(0,200,150,0.15);
+}
+
+/* Title */
+.jd-title {
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: var(--teal);
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 5px;
+}
+
+/* Description text */
+.jd-text {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+/* Skills chips */
+.jd-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.jd-skills span {
+  background: rgba(0,200,150,0.08);
+  border: 1px solid rgba(0,200,150,0.3);
+  color: var(--teal);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  transition: 0.2s ease;
+}
+
+.jd-skills span:hover {
+  background: rgba(0,200,150,0.2);
+  transform: scale(1.05);
+} 
+
+@media screen and (max-width: 1200px){
+  .jd-container{
+    width: 77%;
+  }
+}
+
+@media screen and (max-width: 900px){
+  .jd-container{
+    width: 83%;
+  }
+}
+
+@media screen and (max-width: 769px){
+  .jd-container{
+    width: 88%;
+    
+  }
+}
+
+@media screen and (max-width: 570px){
+  .jd-container{
+    width: 93%;
+    margin-top: 1rem;
+  }
+}
+
+@media screen and (max-width: 450px){
+  .jd-container{
+    width: 97%;
+    margin-top: 1.5rem;
+  }
 }

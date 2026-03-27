@@ -17,7 +17,15 @@ const Demo = () => {
           <div className="orb orb-2"></div>
           <div className="orb orb-3"></div>
         </div>
-
+        <div className="jd-container">
+          <h3 className="jd-title">Job Description</h3>
+          <p className="jd-text">
+          We are looking for a Full Stack Developer with experience in building
+          scalable web applications. The candidate should be proficient in React.js,
+          Node.js, and MongoDB. Familiarity with RESTful APIs, cloud platforms like AWS,
+          and containerization tools such as Docker is highly preferred.
+          </p>
+        </div>
         <div className="report-container">
 
           <h2 className="report-title">ATS Resume Analysis Report</h2>
@@ -93,6 +101,7 @@ const Demo = () => {
           </div>
 
         </div>
+        
       </section>
     </div>
   );

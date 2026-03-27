@@ -19,17 +19,24 @@ export const generatePDF = (resumeData) => {
 
   // Skills
   doc.fontSize(14).text("Skills");
-  resumeData.skills?.forEach(skill => doc.text("• " + skill));
+  resumeData.skills?.forEach(skill => {
+  doc.text("• " + (typeof skill === "string" ? skill : skill.name || skill.skill || JSON.stringify(skill)));
+  });
   doc.moveDown();
 
   // Experience
   doc.fontSize(14).text("Experience");
-  resumeData.experience_points?.forEach(p => doc.text("• " + p));
+  resumeData.experience_points?.forEach(p => {
+  doc.text("• " + (typeof p === "string" ? p : p.point || p.description || JSON.stringify(p)));
+  });
   doc.moveDown();
 
   // Projects
   doc.fontSize(14).text("Projects");
-  resumeData.projects?.forEach(p => doc.text("• " + p));
+  resumeData.projects?.forEach(p => {
+  doc.text("• " + (typeof p === "string" ? p : p.name || p.title || JSON.stringify(p)));
+  });
+  
 
   doc.end();
 

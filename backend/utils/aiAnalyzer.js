@@ -51,29 +51,53 @@ export const analyzeWithGemini = async (resumeText, jobDescription) => {
     }
 
     // Try parsing
-    try {
-      const parsed = JSON.parse(
-        rawText
-          .replace(/```json/g, "")
-          .replace(/```/g, "")
-          .trim()
-      );
+    // Try parsing
+try {
+  const parsed = JSON.parse(
+    rawText
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim()
+  );
 
-      return parsed;
-
-    } catch (parseError) {
-      console.warn("JSON parsing failed. Returning raw model output.");
-      return {
-        success: false,
-        raw_model_output: rawText
-      };
+  return {
+    success: true,
+    analysis: parsed.analysis || {},
+    improved_resume: parsed.improved_resume || {
+      professional_summary: "Improve your summary based on job role",
+      skills: [],
+      experience_points: [],
+      projects: []
     }
+  };
+
+} catch (parseError) {
+  console.warn("JSON parsing failed. Returning safe fallback.");
+
+  return {
+    success: false,
+    analysis: {},
+    improved_resume: {
+      professional_summary: "Could not generate optimized resume",
+      skills: [],
+      experience_points: [],
+      projects: []
+    }
+  };
+}
 
   } catch (err) {
     console.error("Gemini Fatal Error:", err.message);
     return {
       success: false,
-      error: err.message
+      analysis: {},
+      improved_resume: {
+      professional_summary: "Error generating resume",
+      skills: [],
+      experience_points: [],
+      projects: []
+    },
+    error: err.message
     };
   }
 };
