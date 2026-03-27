@@ -14,7 +14,7 @@ const OptimizedDownload = () => {
       const token = localStorage.getItem("token");
       console.log("FRONTEND TOKEN:", token);
       const response = await fetch(
-        "http://localhost:5000/resume/download",
+        "https://resume-ats-backend-4xxk.onrender.com/resume/download",
         {
           method: "POST",
           headers: {
